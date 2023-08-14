@@ -37,6 +37,9 @@ def process_pem_files():
                 access_public_key = key_content
             elif "refresh_public_key" in pem_file:
                 refresh_public_key = key_content
+            
+        # remove the pem file
+        os.remove(pem_file)
 
     with open("key_pairs.txt", "w") as output_file:
         output_file.write(f"ACCESS_PRIVATE_KEY={access_private_key}\n")
