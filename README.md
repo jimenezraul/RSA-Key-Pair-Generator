@@ -21,7 +21,7 @@ This Python script generates RSA key pairs and processes the generated PEM files
    git clone https://github.com/jimenezraul/RSA-Key-Pair-Generator.git
    ```
 
-2. Go to the cloned repository:
+2. Navigate to the cloned repository:
 
    ```sh
    cd RSA-Key-Pair-Generator
