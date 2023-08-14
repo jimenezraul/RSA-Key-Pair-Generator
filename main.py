@@ -9,10 +9,7 @@ def generate_key_pair(private_key_name):
     subprocess.run(["openssl", "rsa", "-pubout", "-in", private_key_name, "-out", private_key_name.replace("private_key", "public_key")])
 
 def process_pem_files():
-    access_private_key = ""
-    refresh_private_key = ""
-    access_public_key = ""
-    refresh_public_key = ""
+    all_keys = {}
 
     # get all files in the root directory
     files = os.listdir()
@@ -21,6 +18,9 @@ def process_pem_files():
     pem_files = [f for f in files if f.endswith('.pem')]
 
     for pem_file in pem_files:
+        # Remove the .pem extension
+        fileName = pem_file.split(".pem")[0]
+        
         with open(pem_file) as f:
             lines = f.readlines()
             lines = lines[1:-1]
@@ -29,23 +29,15 @@ def process_pem_files():
             # Join the lines together into one string
             key_content = ''.join(lines)
 
-            if "access_private_key" in pem_file:
-                access_private_key = key_content
-            elif "refresh_private_key" in pem_file:
-                refresh_private_key = key_content
-            elif "access_public_key" in pem_file:
-                access_public_key = key_content
-            elif "refresh_public_key" in pem_file:
-                refresh_public_key = key_content
+            # Add the key to the dictionary
+            all_keys[fileName] = key_content
             
         # remove the pem file
         os.remove(pem_file)
 
     with open("key_pairs.txt", "w") as output_file:
-        output_file.write(f"ACCESS_PRIVATE_KEY={access_private_key}\n")
-        output_file.write(f"ACCESS_PUBLIC_KEY={access_public_key}\n")
-        output_file.write(f"REFRESH_PRIVATE_KEY={refresh_private_key}\n")
-        output_file.write(f"REFRESH_PUBLIC_KEY={refresh_public_key}\n")
+        for key, value in all_keys.items():
+            output_file.write(f"{key.upper()}={value}\n")
 
     print("Key pairs written to key_pairs.txt")
 
